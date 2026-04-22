@@ -283,27 +283,39 @@ footer {
 </section>
 
 <div class="filter-section">
-  <span class="filter-label">Filtrar por fonte</span>
-  <button class="filter-btn active" data-filter="all">
+  <span class="filter-label">Fonte</span>
+  <button class="filter-btn active" data-type="fonte" data-filter="all">
     <span class="dot"></span>Todas
     <span class="filter-count" id="cnt-all"></span>
   </button>
-  <button class="filter-btn" data-filter="RF">
+  <button class="filter-btn" data-type="fonte" data-filter="RF">
     <span class="dot" style="background:#60A5FA"></span>Receita Federal
     <span class="filter-count" id="cnt-RF"></span>
   </button>
-  <button class="filter-btn" data-filter="BACEN">
+  <button class="filter-btn" data-type="fonte" data-filter="BACEN">
     <span class="dot" style="background:#A78BFA"></span>Banco Central
     <span class="filter-count" id="cnt-BACEN"></span>
   </button>
-  <button class="filter-btn" data-filter="GDF">
+  <button class="filter-btn" data-type="fonte" data-filter="GDF">
     <span class="dot" style="background:#34D399"></span>Governo do DF
     <span class="filter-count" id="cnt-GDF"></span>
   </button>
-  <button class="filter-btn" data-filter="MFO">
+  <button class="filter-btn" data-type="fonte" data-filter="MFO">
     <span class="dot" style="background:#C9A84C"></span>Altum Capital
     <span class="filter-count" id="cnt-MFO"></span>
   </button>
+  <span class="filter-label" style="margin-left:12px;">Mês</span>
+  <button class="filter-btn active" data-type="mes" data-filter="all">Todos</button>
+  <button class="filter-btn" data-type="mes" data-filter="2">Fev</button>
+  <button class="filter-btn" data-type="mes" data-filter="3">Mar</button>
+  <button class="filter-btn" data-type="mes" data-filter="4">Abr</button>
+  <button class="filter-btn" data-type="mes" data-filter="5">Mai</button>
+  <button class="filter-btn" data-type="mes" data-filter="6">Jun</button>
+  <button class="filter-btn" data-type="mes" data-filter="7">Jul</button>
+  <button class="filter-btn" data-type="mes" data-filter="9">Set</button>
+  <button class="filter-btn" data-type="mes" data-filter="10">Out</button>
+  <button class="filter-btn" data-type="mes" data-filter="11">Nov</button>
+  <button class="filter-btn" data-type="mes" data-filter="12">Dez</button>
 </div>
 
 <div class="timeline-wrap" id="timeline"></div>
@@ -569,6 +581,7 @@ meses.forEach(m => {
     const item = document.createElement("div");
     item.className = "obr-item";
     item.dataset.fonte = o.fonte;
+    item.dataset.mes   = String(o.mes);
 
     item.innerHTML = `
       <div class="obr-dia">
@@ -594,45 +607,54 @@ meses.forEach(m => {
   tl.appendChild(block);
 });
 
+// ── ESTADO DOS FILTROS ──────────────────────────────────────────
+const estado = { fonte: "all", mes: "all" };
+
+function applyFilters() {
+  document.querySelectorAll(".obr-item").forEach(item => {
+    const fonteOk = estado.fonte === "all" || item.dataset.fonte === estado.fonte;
+    const mesOk   = estado.mes   === "all" || item.dataset.mes   === estado.mes;
+    item.classList.toggle("hidden", !(fonteOk && mesOk));
+  });
+
+  document.querySelectorAll(".month-block").forEach(block => {
+    const visible = block.querySelectorAll(".obr-item:not(.hidden)").length;
+    block.classList.toggle("hidden", visible === 0);
+  });
+
+  const anyVisible = document.querySelectorAll(".obr-item:not(.hidden)").length > 0;
+  const existing   = document.querySelector(".empty-state");
+  if (!anyVisible && !existing) {
+    const em = document.createElement("div");
+    em.className = "empty-state";
+    em.textContent = "Nenhuma obrigação neste filtro.";
+    document.getElementById("timeline").appendChild(em);
+  } else if (anyVisible && existing) {
+    existing.remove();
+  }
+}
+
 // Contagens
 function updateCounts() {
-  const total = OBR.length;
-  document.getElementById("cnt-all").textContent = total;
+  document.getElementById("cnt-all").textContent = OBR.length;
   ["RF","BACEN","GDF","MFO"].forEach(f => {
     document.getElementById("cnt-"+f).textContent = OBR.filter(o=>o.fonte===f).length;
   });
 }
 updateCounts();
 
-// Filtro
+// Listeners unificados
 document.querySelectorAll(".filter-btn").forEach(btn => {
   btn.addEventListener("click", () => {
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    const type = btn.dataset.type;   // "fonte" ou "mes"
+    const val  = btn.dataset.filter;
+
+    // Destacar botão ativo dentro do grupo
+    document.querySelectorAll(`.filter-btn[data-type="${type}"]`).forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    const f = btn.dataset.filter;
 
-    document.querySelectorAll(".obr-item").forEach(item => {
-      item.classList.toggle("hidden", f !== "all" && item.dataset.fonte !== f);
-    });
-
-    // hide empty months
-    document.querySelectorAll(".month-block").forEach(block => {
-      const visible = block.querySelectorAll(".obr-item:not(.hidden)").length;
-      block.classList.toggle("hidden", visible === 0);
-    });
-
-    // empty state
-    const tl = document.getElementById("timeline");
-    const anyVisible = document.querySelectorAll(".obr-item:not(.hidden)").length > 0;
-    const existing = document.querySelector(".empty-state");
-    if (!anyVisible && !existing) {
-      const em = document.createElement("div");
-      em.className = "empty-state";
-      em.textContent = "Nenhuma obrigação neste filtro.";
-      tl.appendChild(em);
-    } else if (anyVisible && existing) {
-      existing.remove();
-    }
+    estado[type] = val;
+    applyFilters();
   });
 });
 </script>
