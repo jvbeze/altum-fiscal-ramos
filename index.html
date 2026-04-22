@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendário Fiscal 2026 — Família Ramos · Altum Capital</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:    #0E1C2F;
+    --navy2:   #152535;
+    --navy3:   #1A2E4A;
+    --gold:    #C9A84C;
+    --gold2:   #E8C96A;
+    --cream:   #F5F0E8;
+    --text:    #E8E4DC;
+    --muted:   #7A8FA8;
+    --faint:   rgba(255,255,255,0.05);
+    --border:  rgba(201,168,76,0.18);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRAIN TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: linear-gradient(180deg, rgba(14,28,47,0.98) 0%, rgba(14,28,47,0.92) 100%);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .logo-area { display: flex; flex-direction: column; gap: 2px; }
+  .logo-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 700; letter-spacing: 3px;
+    color: var(--gold);
+  }
+  .logo-sub { font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .header-right { text-align: right; }
+  .header-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--text); }
+  .header-date { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative; z-index: 1;
+    padding: 56px 32px 40px;
+    text-align: center;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 70%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-eyebrow {
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 12px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 52px); font-weight: 600; line-height: 1.15;
+    color: var(--text); margin-bottom: 16px;
+  }
+  .hero-title em { color: var(--gold); font-style: italic; }
+  .hero-desc { font-size: 13px; color: var(--muted); max-width: 520px; margin: 0 auto 28px; line-height: 1.7; }
+  .hero-badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .hero-badge {
+    font-size: 10px; padding: 4px 12px; border-radius: 20px;
+    border: 1px solid var(--border); color: var(--muted);
+  }
+
+  /* ── ALERT BANNER ── */
+  .alert-banner {
+    margin: 20px 32px 0;
+    padding: 12px 20px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.25);
+    border-left: 3px solid #EF4444;
+    border-radius: 6px;
+    font-size: 12px; line-height: 1.5;
+    position: relative; z-index: 1;
+  }
+  .alert-banner strong { color: #FCA5A5; }
+  .alert-banner span { color: #FDA4A4; }
+
+  /* ── NAV TABS ── */
+  .tab-nav {
+    position: relative; z-index: 1;
+    display: flex; gap: 0; overflow-x: auto;
+    padding: 0 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    scrollbar-width: none;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex-shrink: 0; padding: 14px 20px;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+    color: var(--muted); background: none; border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer; transition: all .2s; white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(201,168,76,0.15); color: var(--gold);
+    font-size: 9px; font-weight: 700; margin-left: 6px;
+  }
+
+  /* ── MAIN CONTENT ── */
+  main {
+    position: relative; z-index: 1;
+    max-width: 940px; margin: 0 auto;
+    padding: 28px 32px 60px;
+  }
+
+  /* ── MONTH SECTION ── */
+  .month-pane { display: none; }
+  .month-pane.active { display: block; }
+
+  .month-header {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px;
+  }
+  .month-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 600; color: var(--text);
+  }
+  .month-year { font-size: 14px; color: var(--muted); }
+  .month-count { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+  /* ── CARDS ── */
+  .cards { display: flex; flex-direction: column; gap: 10px; }
+  .card {
+    background: var(--navy2);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-left: 3px solid var(--dot-color, #7A8FA8);
+    border-radius: 8px;
+    padding: 16px 20px;
+    cursor: default;
+    transition: all .2s;
+    animation: fadeIn .3s ease both;
+  }
+  .card:hover {
+    background: var(--navy3);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateX(2px);
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+  .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag {
+    font-size: 9px; font-weight: 600; padding: 2px 7px; border-radius: 4px;
+    border: 1px solid;
+  }
+  .tag-tipo { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); color: var(--muted); }
+  .tag-urg { border-color: transparent; }
+  .tag-urg.critica { background: rgba(239,68,68,0.12); color: #FCA5A5; border-color: rgba(239,68,68,0.2); }
+  .tag-urg.alta    { background: rgba(245,158,11,0.12); color: #FCD34D; border-color: rgba(245,158,11,0.2); }
+  .tag-urg.media   { background: rgba(59,130,246,0.10); color: #93C5FD; border-color: rgba(59,130,246,0.15); }
+  .tag-urg.rotina  { background: rgba(34,197,94,0.10);  color: #86EFAC; border-color: rgba(34,197,94,0.15); }
+
+  .card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+  .dias-badge {
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+    white-space: nowrap;
+  }
+  .dias-badge.vencida  { background: rgba(255,255,255,0.06); color: #4A6880; }
+  .dias-badge.urgente  { background: rgba(239,68,68,0.15); color: #FCA5A5; }
+  .dias-badge.atencao  { background: rgba(245,158,11,0.15); color: #FCD34D; }
+  .dias-badge.proximo  { background: rgba(234,88,12,0.12);  color: #FDB575; }
+  .dias-badge.normal   { background: rgba(255,255,255,0.06); color: var(--muted); }
+
+  .card-venc { font-size: 10px; color: var(--muted); }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; font-weight: 600; color: var(--text);
+    margin-bottom: 5px; line-height: 1.3;
+  }
+  .card-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
+  .card-resp {
+    margin-top: 8px; padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-resp-label { font-size: 9px; color: #3A5A7A; text-transform: uppercase; letter-spacing: 1px; }
+  .card-resp-name  { font-size: 10px; color: var(--muted); font-weight: 500; }
+  .card-fonte { font-size: 9px; color: #2A4060; font-style: italic; }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    text-align: center; padding: 60px 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; color: #2A4060; font-style: italic;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    text-align: center; padding: 24px 32px;
+    border-top: 1px solid var(--border);
+    font-size: 10px; color: #2A4060; letter-spacing: 1px;
+  }
+  footer span { color: var(--gold); opacity: 0.6; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    header, .hero, main, .tab-nav { padding-left: 16px; padding-right: 16px; }
+    .alert-banner { margin-left: 16px; margin-right: 16px; }
+    .hero { padding: 36px 16px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <div class="logo-name">ALTUM CAPITAL</div>
+    <div class="logo-sub">Multi Family Office · Brasília</div>
+  </div>
+  <div class="header-right">
+    <div class="header-title">Calendário Fiscal 2026</div>
+    <div class="header-date">Pedro &amp; Paola Ramos · Uso Confidencial</div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Gestão Patrimonial · Altum Capital MFO</div>
+  <h1 class="hero-title">Suas obrigações fiscais<br><em>organizadas para 2026</em></h1>
+  <p class="hero-desc">Calendário consolidado de todas as obrigações tributárias federais, distritais e do Banco Central relevantes para você e sua família. Atualizado mensalmente pela equipe Altum.</p>
+  <div class="hero-badges">
+    <span class="hero-badge">🏛 Receita Federal</span>
+    <span class="hero-badge">🏦 Banco Central (CBE)</span>
+    <span class="hero-badge">🏙 Governo do DF</span>
+    <span class="hero-badge">🌎 Bens no Exterior</span>
+    <span class="hero-badge">🏢 Holdings PJ</span>
+  </div>
+</div>
+
+<div class="alert-banner">
+  <strong>⚠ Ação imediata necessária:</strong>
+  <span> CBE Anual BACEN 2026 (data-base 31/12/2025) — prazo encerrado em 05/04/2026 às 18h. Confirmar com Cescon Barrieu se a declaração foi entregue. Multa: R$ 2.500 a R$ 250.000.</span>
+</div>
+
+<nav class="tab-nav" id="tabNav"></nav>
+
+<main id="main"></main>
+
+<footer>
+  Documento confidencial · <span>Altum Capital — Multi Family Office</span> · Brasília, DF · Atualizado em Abril/2026
+</footer>
+
+<script>
+const HOJE = new Date(2026, 3, 21);
+
+const OBR = [
+  // MARÇO
+  { mes:3, dia:15, tipo:"IRPF", urg:"alta",
+    titulo:"Coleta de documentos para IRPF 2026",
+    desc:"Enviar à Altum todos os documentos para a declaração: informes de rendimento BTG, XP e Safra International, comprovantes de plano de saúde, recibos médicos, educação de Daniel e Luísa, e demonstrativos das holdings ECR Capital e ECR Ventures. Incluir documentação de bens no exterior conforme exigido pela IN RFB 2.312/2026.",
+    resp:"Anna Luiza / Cescon Barrieu", fonte:"Receita Federal — IN RFB 2.312/2026" },
+
+  // ABRIL
+  { mes:4, dia:5, tipo:"BACEN / CBE", urg:"critica",
+    titulo:"CBE Anual — Capitais Brasileiros no Exterior (ENCERRADA)",
+    desc:"Prazo encerrado em 05/04/2026 às 18h. Declaração de ativos no exterior ≥ USD 1 milhão em 31/12/2025 ao Banco Central. Confirmar com Cescon Barrieu se foi entregue. Se não, regularizar imediatamente — há redutores de multa para atrasos curtos.",
+    resp:"Cescon Barrieu", fonte:"BACEN — Resolução nº 279/2022" },
+  { mes:4, dia:22, tipo:"IPVA — DF", urg:"alta",
+    titulo:"IPVA DF 2026 — 3ª parcela",
+    desc:"3ª parcela do IPVA para veículos com placa final 1 e 2 (verificar data exata pela placa). Emitir guia em receita.fazenda.df.gov.br. Alíquota: 3% sobre valor venal (carros).",
+    resp:"Anna Luiza", fonte:"Sec. Economia DF — Portaria nº 923/2025" },
+  { mes:4, dia:30, tipo:"IRPJ/CSLL — PJ", urg:"alta",
+    titulo:"IRPJ/CSLL — 1ª quota 1T2026 — ECR Capital e ECR Ventures",
+    desc:"Pagamento da 1ª quota do IRPJ e CSLL do 1º trimestre de 2026 para as holdings ECR Capital e ECR Ventures. Pagamento via DARF. Confirmar valores apurados com o contador.",
+    resp:"Contador", fonte:"RFB — Lei 9.430/1996, art. 28" },
+  { mes:4, dia:30, tipo:"Reunião", urg:"rotina",
+    titulo:"Reunião Estratégica Trimestral — Q1 2026",
+    desc:"Revisão do patrimônio e performance do 1º trimestre com a equipe Altum. Pautas: performance Q1, ajuste de alocação, despesas Jan–Mar, planejamento tributário Q2.",
+    resp:"Equipe Altum Capital", fonte:"Cadência MFO Altum Capital" },
+
+  // MAIO
+  { mes:5, dia:11, tipo:"IPTU — DF", urg:"alta",
+    titulo:"IPTU/TLP DF 2026 — cota única com 10% de desconto",
+    desc:"Vencimento da cota única do IPTU e Taxa de Limpeza Pública do DF (11–15 de maio, varia pelo dígito verificador da inscrição). Desconto de 10% para pagamento integral. Parcelamento em até 6x, sem desconto. Emitir guia (DAR) em receita.fazenda.df.gov.br.",
+    resp:"Anna Luiza", fonte:"Sec. Economia DF — Portaria DODF 25/03/2026" },
+  { mes:5, dia:15, tipo:"Seguros", urg:"media",
+    titulo:"Revisão anual de apólices — vida e patrimonial",
+    desc:"Verificar vencimento e cobertura das apólices de seguro de vida e patrimonial da família. A Altum faz a gestão das renovações.",
+    resp:"Anna Luiza", fonte:"Controle interno Altum" },
+  { mes:5, dia:22, tipo:"IPVA — DF", urg:"media",
+    titulo:"IPVA DF 2026 — 4ª parcela",
+    desc:"4ª parcela do IPVA 2026 (para quem optou pelo parcelamento em 6x). Verificar data exata pela placa em receita.fazenda.df.gov.br.",
+    resp:"Anna Luiza", fonte:"Sec. Economia DF — Portaria nº 923/2025" },
+  { mes:5, dia:29, tipo:"IRPF", urg:"critica",
+    titulo:"Prazo final IRPF 2026 — declaração ano-base 2025",
+    desc:"Prazo final: 29/05/2026 às 23h59. Pedro é obrigado a declarar rendimentos acima de R$ 35.584, patrimônio acima de R$ 800 mil, bens no exterior e participações em offshores (IN RFB 2.312/2026). Recomenda-se entrega antecipada para prioridade na restituição.",
+    resp:"Contador + Cescon Barrieu", fonte:"Receita Federal — IN RFB 2.312/2026" },
+  { mes:5, dia:29, tipo:"IRPJ/CSLL — PJ", urg:"alta",
+    titulo:"ECD — Escrituração Contábil Digital 2025",
+    desc:"Entrega da ECD (ano-base 2025) para ECR Capital e ECR Ventures. Prazo: último dia útil de maio (29/05). Obrigatória antes da ECF de julho. Transmissão via SPED.",
+    resp:"Contador", fonte:"RFB — Instrução Normativa SPED" },
+
+  // JUNHO
+  { mes:6, dia:5, tipo:"BACEN / CBE", urg:"alta",
+    titulo:"CBE Trimestral — data-base 31/03/2026",
+    desc:"Declaração trimestral de ativos no exterior ao Banco Central, para quem possui ≥ USD 100 milhões em 31/03/2026. Janela: 30/04 a 05/06/2026. Confirmar com Cescon Barrieu.",
+    resp:"Cescon Barrieu", fonte:"BACEN — RN 279/2022 · Janela: 30/04–05/06" },
+  { mes:6, dia:22, tipo:"IPVA — DF", urg:"media",
+    titulo:"IPVA DF 2026 — 5ª parcela",
+    desc:"5ª parcela do IPVA 2026. Verificar data exata pela placa em receita.fazenda.df.gov.br.",
+    resp:"Anna Luiza", fonte:"Sec. Economia DF — Portaria nº 923/2025" },
+
+  // JULHO
+  { mes:7, dia:22, tipo:"IPVA — DF", urg:"media",
+    titulo:"IPVA DF 2026 — 6ª parcela (última)",
+    desc:"Última parcela do IPVA 2026. Após o pagamento, confirmar regularização do licenciamento no Detran DF.",
+    resp:"Anna Luiza", fonte:"Sec. Economia DF — Portaria nº 923/2025" },
+  { mes:7, dia:31, tipo:"IRPJ/CSLL — PJ", urg:"alta",
+    titulo:"IRPJ/CSLL 2T2026 + ECF — ECR Capital e ECR Ventures",
+    desc:"Duas obrigações em julho: (1) IRPJ/CSLL do 2T2026, prazo 31/07. (2) ECF — Escrituração Contábil Fiscal, prazo último dia útil de julho. A ECF só pode ser entregue após a ECD de maio.",
+    resp:"Contador", fonte:"RFB — Lei 9.430/1996 · ECD obrigatória antes" },
+  { mes:7, dia:31, tipo:"Reunião", urg:"rotina",
+    titulo:"Reunião Estratégica Trimestral — Q2 2026",
+    desc:"Revisão semestral: performance Jan–Jun, despesas H1, CBE trimestral (jun), planejamento H2, encaminhamentos tributários.",
+    resp:"Equipe Altum Capital", fonte:"Cadência MFO Altum Capital" },
+
+  // SETEMBRO
+  { mes:9, dia:5, tipo:"BACEN / CBE", urg:"media",
+    titulo:"CBE Trimestral — data-base 30/06/2026",
+    desc:"Segunda CBE trimestral do ano. Data-base: saldo de ativos no exterior em 30/06/2026. Janela de entrega: 31/07 a 05/09/2026.",
+    resp:"Cescon Barrieu", fonte:"BACEN — RN 279/2022 · Janela: 31/07–05/09" },
+
+  // OUTUBRO
+  { mes:10, dia:30, tipo:"IRPJ/CSLL — PJ", urg:"alta",
+    titulo:"IRPJ/CSLL — 3ª quota 3T2026",
+    desc:"Pagamento da 3ª quota do IRPJ/CSLL do 3T2026 para ECR Capital e ECR Ventures. Confirmar valores com o contador.",
+    resp:"Contador", fonte:"RFB — Lei 9.430/1996, art. 28" },
+  { mes:10, dia:30, tipo:"Reunião", urg:"rotina",
+    titulo:"Reunião Estratégica Trimestral — Q3 2026",
+    desc:"Revisão Q3 e planejamento de encerramento de ano: distribuição de dividendos das holdings, otimização tributária de dezembro, PGBL.",
+    resp:"Equipe Altum Capital", fonte:"Cadência MFO Altum Capital" },
+
+  // DEZEMBRO
+  { mes:12, dia:5, tipo:"BACEN / CBE", urg:"media",
+    titulo:"CBE Trimestral — data-base 30/09/2026",
+    desc:"Terceira CBE trimestral do ano. Data-base: saldo de ativos no exterior em 30/09/2026. Janela de entrega: 31/10 a 05/12/2026.",
+    resp:"Cescon Barrieu", fonte:"BACEN — RN 279/2022 · Janela: 31/10–05/12" },
+  { mes:12, dia:10, tipo:"Reunião", urg:"alta",
+    titulo:"Reunião de Planejamento Anual — 2027",
+    desc:"Reunião anual para definir metas patrimoniais 2027, ajustar o IPS, revisar o escopo Altum e antecipar obrigações de janeiro (IPVA, CBE anual, coleta docs IRPF).",
+    resp:"Equipe Altum Capital", fonte:"Cadência MFO Altum Capital" },
+  { mes:12, dia:31, tipo:"Previdência", urg:"alta",
+    titulo:"Aporte PGBL — prazo para dedutibilidade IRPF 2027",
+    desc:"Para maximizar a dedução no IRPF 2027, aportes PGBL devem ser realizados até 31/12/2026. Limite: 12% da renda bruta tributável anual. A Altum apresentará o cálculo ótimo na reunião de outubro.",
+    resp:"Sócio-fundador Altum", fonte:"RFB — Lei 9.532/1997, art. 11" },
+];
+
+const TIPO_DOT = {
+  "IRPF":             "#F59E0B",
+  "BACEN / CBE":      "#8B5CF6",
+  "IPTU — DF":        "#3B82F6",
+  "IPVA — DF":        "#60A5FA",
+  "IRPJ/CSLL — PJ":  "#10B981",
+  "GCAP":             "#EC4899",
+  "Reunião":          "#EA580C",
+  "Previdência":      "#14B8A6",
+  "Seguros":          "#6B7280",
+};
+
+const MESES = [
+  null,
+  "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+  "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
+];
+
+function getDias(mes, dia) {
+  const venc = new Date(2026, mes - 1, dia);
+  return Math.ceil((venc - HOJE) / 86400000);
+}
+
+function diasBadgeClass(d) {
+  if (d < 0)  return "vencida";
+  if (d <= 7) return "urgente";
+  if (d <= 15) return "atencao";
+  if (d <= 30) return "proximo";
+  return "normal";
+}
+
+function diasBadgeLabel(d) {
+  if (d < 0)  return "Encerrada";
+  if (d === 0) return "Hoje!";
+  return `${d} dias`;
+}
+
+function urgLabel(u) {
+  const m = { critica:"🔴 Crítica", alta:"🟡 Alta", media:"🔵 Média", rotina:"🟢 Rotina" };
+  return m[u] || u;
+}
+
+// Build tabs and content
+const mesesComObr = [...new Set(OBR.map(o => o.mes))].sort((a,b)=>a-b);
+const tabNav = document.getElementById("tabNav");
+const mainEl = document.getElementById("main");
+
+// "Todos" tab
+const todosBtn = document.createElement("button");
+todosBtn.className = "tab-btn active";
+todosBtn.dataset.pane = "todos";
+todosBtn.innerHTML = `Todas<span class="tab-count">${OBR.length}</span>`;
+tabNav.appendChild(todosBtn);
+
+mesesComObr.forEach(m => {
+  const count = OBR.filter(o => o.mes === m).length;
+  const btn = document.createElement("button");
+  btn.className = "tab-btn";
+  btn.dataset.pane = `mes-${m}`;
+  btn.innerHTML = `${MESES[m]}<span class="tab-count">${count}</span>`;
+  tabNav.appendChild(btn);
+});
+
+function renderCards(list, paneId) {
+  const pane = document.createElement("div");
+  pane.className = "month-pane";
+  pane.id = paneId;
+  if (paneId === "todos") pane.classList.add("active");
+
+  if (list.length === 0) {
+    pane.innerHTML = `<div class="empty">Nenhuma obrigação neste período.</div>`;
+  } else {
+    const cards = document.createElement("div");
+    cards.className = "cards";
+    list.forEach((o, i) => {
+      const d = getDias(o.mes, o.dia);
+      const dot = TIPO_DOT[o.tipo] || "#7A8FA8";
+      const card = document.createElement("div");
+      card.className = "card";
+      card.style.setProperty("--dot-color", dot);
+      card.style.animationDelay = `${i * 40}ms`;
+      card.innerHTML = `
+        <div class="card-top">
+          <div class="card-tags">
+            <span class="tag tag-tipo">${o.tipo}</span>
+            <span class="tag tag-urg ${o.urg}">${urgLabel(o.urg)}</span>
+          </div>
+          <div class="card-right">
+            <span class="dias-badge ${diasBadgeClass(d)}">${diasBadgeLabel(d)}</span>
+            <span class="card-venc">Dia ${o.dia}/${String(o.mes).padStart(2,"0")}/2026</span>
+          </div>
+        </div>
+        <div class="card-title">${o.titulo}</div>
+        <div class="card-desc">${o.desc}</div>
+        <div class="card-resp">
+          <div>
+            <div class="card-resp-label">Responsável Altum</div>
+            <div class="card-resp-name">${o.resp}</div>
+          </div>
+          <div class="card-fonte">${o.fonte}</div>
+        </div>
+      `;
+      cards.appendChild(card);
+    });
+    pane.appendChild(cards);
+  }
+  mainEl.appendChild(pane);
+}
+
+// Render "todos" pane
+renderCards([...OBR].sort((a,b) => (a.mes*100+a.dia) - (b.mes*100+b.dia)), "todos");
+
+// Render per-month panes
+mesesComObr.forEach(m => {
+  const list = OBR.filter(o => o.mes === m).sort((a,b) => a.dia - b.dia);
+  const pane = document.createElement("div");
+  pane.className = "month-pane";
+  pane.id = `mes-${m}`;
+  const mHeader = document.createElement("div");
+  mHeader.className = "month-header";
+  mHeader.innerHTML = `<span class="month-name">${MESES[m]}</span><span class="month-year">2026</span><span class="month-count">${list.length} obrigação${list.length!==1?"s":""}</span>`;
+  pane.appendChild(mHeader);
+  const cards = document.createElement("div");
+  cards.className = "cards";
+  list.forEach((o, i) => {
+    const d = getDias(o.mes, o.dia);
+    const dot = TIPO_DOT[o.tipo] || "#7A8FA8";
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.setProperty("--dot-color", dot);
+    card.style.animationDelay = `${i * 50}ms`;
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-tags">
+          <span class="tag tag-tipo">${o.tipo}</span>
+          <span class="tag tag-urg ${o.urg}">${urgLabel(o.urg)}</span>
+        </div>
+        <div class="card-right">
+          <span class="dias-badge ${diasBadgeClass(d)}">${diasBadgeLabel(d)}</span>
+          <span class="card-venc">Dia ${o.dia}</span>
+        </div>
+      </div>
+      <div class="card-title">${o.titulo}</div>
+      <div class="card-desc">${o.desc}</div>
+      <div class="card-resp">
+        <div>
+          <div class="card-resp-label">Responsável Altum</div>
+          <div class="card-resp-name">${o.resp}</div>
+        </div>
+        <div class="card-fonte">${o.fonte}</div>
+      </div>
+    `;
+    cards.appendChild(card);
+  });
+  pane.appendChild(cards);
+  mainEl.appendChild(pane);
+});
+
+// Tab switching
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".month-pane").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.pane).classList.add("active");
+  });
+});
+</script>
+</body>
+</html>
